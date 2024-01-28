@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block subtitle %} Checkout {% endblock subtitle %}
+{% block body %}
+<main class="mt-5">
+    <div class="container mynav">
+      {% for m in messages%} 
+      <div class="alert alert-success text-center"><h4>{{m}}</h4></div>
+      {% endfor %}
+        {% if order %}
+        <div class="alert alert-success">
+            <h5>ordernumber is: {{order.id}} </h5>
+            <h5>num of product is: {{num_product}}</h5>
+            <h5>Total Amount is: {{total}}</h5>
+        </div>
+        <div class="alert alert-success ">
+         <form method="post">{% csrf_token %}
+            {{form}}
+            <button type="submit" class="btn btn-primary">Payment</button>
+         </form>
+        </div>
+        {% else %}
+        <div class="row d-flex justify-content-center wow fadeIn "><h4>No Order</h4></div>
+        {% endif %}
+    </div>      
+</main>
+{% endblock body %}

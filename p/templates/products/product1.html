@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block subtitle %}Detail Of Product{% endblock subtitle %}
+{% block body %}
+<link href="{% static 'css/rate2.css' %}" rel="stylesheet">
+<script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+
+
+
+  <!--Main layout-->
+  <main class="mt-5 pt-4">
+    
+    <div class="container dark-grey-text mt-5">
+      {% for m in messages%} 
+      <div class="alert alert-success text-center"><h4>{{m}}</h4></div>
+      {% endfor %} 
+      <!--Grid row-->
+      <div class="row wow fadeIn">
+        
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+        
+
+        {% if p.pimage %}
+              <img src="{{p.pimage.url}}" class="img-fluid" alt="">
+        {% else %}
+             <img src="{% static 'image/p.svg' %}" class="img-fluid" alt="">
+        {% endif %}
+
+          <div class="container">
+            <br><strong style=" font-size: 17px;">{{total}}</strong>
+            {% if total == 5 %}
+            <span class="icon">★★★★★</span>
+            {% elif total == 4 %}
+            <span class="icon">★★★★</span>
+            {% elif total == 3 %}
+            <span class="icon">★★★</span>
+            {% elif total == 2 %}
+            <span class="icon">★★</span>
+            {% elif total == 1 %}
+            <span class="icon">★</span>
+            {% else %}
+            <span class="icon">★</span>
+            {% endif %}
+
+            {% for i in show_comment %}
+            {% if i.comment %}
+             <h6 class="h6">{{i.user_comment}}--:{{i.date}}</h6><strong><small>{{i.comment}}</small></strong>
+            {% endif %}
+            {% endfor %}<hr>
+
+          </div>
+          {% if user.is_authenticated %}
+         <div>
+          <form class="rating" method="post" action="{% url 'products:pro' p.pslug %}">{% csrf_token %}
+            <label>
+              <input type="radio" name="stars" value="1" />
+              <span class="icon">★</span>
+            </label>
+            <label>
+              <input type="radio" name="stars" value="2" />
+              <span class="icon">★</span>
+              <span class="icon">★</span>
+            </label>
+            <label>
+              <input type="radio" name="stars" value="3" />
+              <span class="icon">★</span>
+              <span class="icon">★</span>
+              <span class="icon">★</span>   
+            </label>
+            <label>
+              <input type="radio" name="stars" value="4" />
+              <span class="icon">★</span>
+              <span class="icon">★</span>
+              <span class="icon">★</span>
+              <span class="icon">★</span>
+            </label>
+            <label>
+              <input type="radio" name="stars" value="5" />
+              <span class="icon">★</span>
+              <span class="icon">★</span>
+              <span class="icon">★</span>
+              <span class="icon">★</span>
+              <span class="icon">★</span>
+            </label>
+          </div>
+          <input type="text" name="comment" placeholder="Type Your Comment Here" style="height: 50px; width: 400px;"><br>
+            <button type="submit" class="btn btn-primary btn-sm">Send</button>
+          </form> 
+          {% endif %}
+        
+
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-md-6 mb-4">
+
+          <!--Content-->
+          <div class="p-4">
+
+            <div class="mb-3">
+                {% if p.pdiscount > 0 %}
+                    <a href="">
+                      <span class="badge green mr-1">SALE</span>
+                    </a>
+                {% endif %}
+                {% if p.pnew  %}
+                  <a href="">
+                    <span class="badge blue mr-1">New</span>
+                  </a>
+                {% endif %}
+                {% if p.pbestseller %}
+                  <a href="">
+                    <span class="badge red mr-1">Bestseller</span>
+                  </a>
+                {% endif %}
+            </div>
+
+            <p class="lead font-weight-bold">{{p}}</p>
+            <p class="lead">
+              {% if p.pdiscount > 0 %}
+                  <span class="mr-1">
+                    <del>${{p.pprice}}</del>
+                  </span>
+                  <strong>${{p.pdiscount}}</strong>
+              {% else %}
+                <strong>${{p.pprice}}</strong>
+              {% endif %}
+
+            </p>
+
+            <p class="lead font-weight-bold">Description</p>
+
+            <h6 class="h6">{{p.pdesc}}</h6>
+
+            <!--form class="d-flex justify-content-left" method="get"-->
+              <!-- Default input -->
+              <div class="row">
+                <a href="{{ p.get_add_to_favorite_url }}" class="btn btn-primary btn-sm" >
+                  <span>Add To Fav <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-heart-fill" viewBox="0 0 16 16">
+                    <path d="M2 15.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2zM8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z"/>
+                  </svg></span></a>
+                <a href="{{ p.get_remove_from_favorite_url }}" class="btn btn-danger btn-sm ">
+                  Remove from Fav</a>
+                  <form type="get" action="{% url 'products:order' p.pslug  %}">
+                    <input type="hidden" name="qty" value="1">
+                    <button type="submit" class="btn btn-success btn-sm">Add To Cart <i class="fas fa-shopping-cart"></i></button></form>
+                </div>
+                    
+              
+            <!--/form-->
+
+          </div>
+          <!--Content-->
+
+        </div>
+        <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+
+      <hr>
+
+      <!--Grid row-->
+      <div class="row d-flex justify-content-center wow fadeIn">
+
+        <!--Grid column-->
+        
+
+      <!--Grid row-->
+
+    </div>
+  </main>
+  <!--Main layout-->
+  {% endblock body %}
+  

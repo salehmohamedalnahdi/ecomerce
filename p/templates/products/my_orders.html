@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block subtitle %}My Orders{% endblock subtitle %}
+{% block body %}
+<!--Main layout-->
+  
+  <main class="mt-5 pt-4">
+   
+    <div class="container mynav">
+      <!--Grid row-->
+      
+      <div class="row d-flex justify-content-center wow fadeIn">
+            <!--Grid column-->
+            <div class="col-md-6 text-center">
+              {% for m in messages%} 
+              <div class=" alert alert-danger text-center" style=" margin: 10px;"><h4>{{m}}</h4></div>
+              {% endfor %} 
+              {% if orders %}
+              <h4 class="my-4 h4">My Order</h4>
+              <h5 class="my-4 h5">Total Price Of Your Products Is : {{total}}$ <a href="{% url 'products:checkout' %}"> &nbsp;&nbsp;&nbsp; Checkout</a>
+                <a href="{% url 'products:checkout3' %}"> Checkout2</a></h5>
+             
+              <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">product</th>
+                        <th scope="col">price</th>
+                        <th scope="col">quantity</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">delete</th>
+                      </tr>
+                    </thead>
+                    {% for i in orders %} 
+                    <tbody>
+                      <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td>{% if i.product.pimage %}
+                          <img src="{{i.product.pimage.url}}" class="card-img-top"
+                          alt="">
+                        {% else %}
+                          <img class="default-img" src="{% static 'image/p.svg' %}" class="card-img-top"
+                          alt="">
+                        {% endif %}</td>
+                        <td><h6 class="h6">{{i.product.pname}}</h6></td>
+                        <td>{% if i.product.pdiscount %}
+                         <h6 class="h6">{{i.product.pdiscount}}</h6>
+                        {% else %}
+                          <h6 class="h6">{{i.product.pprice}}</h6>
+                        {% endif %}</td>
+                        <td><a href="{% url 'products:adds' i.id %}" class="btn btn-primary btn-sm">+</a>
+                          <div><h6 class="h6">{{i.qty}}</h6></div>
+                          <a href="{% url 'products:sub' i.id %}" class="btn btn-primary btn-sm">-</a></td>
+                        <td><h6 class="h6">{{i.total_price_for_each_prouduct}}$</h6></td>
+                        <td><button type="button"  class="btn btn-danger btn-md my-0 p" data-toggle="modal" data-target="#exampleModalCenter">Remove</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                          <!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title h5" id="exampleModalLongTitle">{{i.product.pname}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5 class="h5">Are Sure To Remove This Product</h5>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a href="{{ i.product.get_remove_from_order_url }}" class="btn btn-danger btn">Sure</a>
+        
+      </div>
+    </div>
+  </div>
+</div>
+                        
+                    {% endfor %}
+                  </table>
+                  {% else %}
+                  <h4>You Did Not Add A product In Your Order</h4>
+                  {% endif %}
+            </div>
+            <!--Grid column-->
+    
+          </div>
+          <!--Grid row-->
+    </div>
+  </main>
+  <!--Main layout-->
+  {% endblock body %}
+  
